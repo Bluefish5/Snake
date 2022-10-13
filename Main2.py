@@ -5,7 +5,8 @@ import random
 import pandas
 from curses import wrapper
 from curses.textpad import Textbox
-
+class model():
+    pass
 class View():
     
     def __init__(self,stdscr):
@@ -13,10 +14,77 @@ class View():
         self.h,self.w = stdscr.getmaxyx()
 
     def mainMenu(self):
-        start(self.stdscr,60,10)
+        self.start(60,10)
         self.stdscr.addstr(self.h//2,self.w//2-5,f"START")
         self.stdscr.addstr(self.h//2+1,self.w//2-5,f"DIFFICULTY")
         self.stdscr.addstr(self.h//2+2,self.w//2-5,f"SCORES")
+        self.stdscr.refresh()
+
+    def start(self,x,y):
+        self.stdscr.addstr(y,x,"""
+                        _______ __   _ _______ _     _ _______       ______ _______ _______ _______
+                        |______ | \  | |_____| |____/  |______      |  ____ |_____| |  |  | |______
+                        ______| |  \_| |     | |    \_ |______      |_____| |     | |  |  | |______
+        """)
+        self.stdscr.refresh()
+
+    def difficultyMenu(self,difficulty):
+        self.stdscr.addstr(self.h//2-2,self.w//2-12,f"ACTUAL DIFFICULTY:{whatIsDifficulty(difficulty)}")
+        self.stdscr.addstr(self.h//2,self.w//2-6,f"EASY")
+        self.stdscr.addstr(self.h//2+1,self.w//2-6,f"MEDIUM")
+        self.stdscr.addstr(self.h//2+2,self.w//2-6,f"HARD")
+        self.stdscr.addstr(self.h//2+4,self.w//2-6,f"BACK")
+        self.stdscr.refresh()
+
+    def legend(self,score,scoreBoardTime,difficulty,direction):
+        self.stdscr.addstr(21,self.w//2-10,f"Time:{round(scoreBoardTime)} Score:{score*20}")
+        self.stdscr.addstr(20,self.w//2-10,f"direction:{direction}")
+        self.stdscr.addstr(22,self.w//2-10,f"difficulty:{whatIsDifficulty(difficulty)}")
+        self.stdscr.refresh()
+
+    def scoreTable(self):
+        self.stdscr.addstr(0,0,f"{readScores()}")
+        self.stdscr.addstr(self.h//2+2,self.w//2-5,f"BACK<")
+        self.stdscr.refresh()
+    def arrowsMainMenu(self,option):
+        if option == 0:
+            self.stdscr.addstr(self.h//2,self.w//2,f"<")
+            self.stdscr.addstr(self.h//2+1,self.w//2+5,f" ")
+            self.stdscr.addstr(self.h//2+2,self.w//2+1,f" ")
+        if option == 1:
+            self.stdscr.addstr(self.h//2,self.w//2,f" ")
+            self.stdscr.addstr(self.h//2+1,self.w//2+5,f"<")
+            self.stdscr.addstr(self.h//2+2,self.w//2+1,f" ")
+        if option == 2:
+            self.stdscr.addstr(self.h//2,self.w//2,f" ")
+            self.stdscr.addstr(self.h//2+1,self.w//2+5,f" ")
+            self.stdscr.addstr(self.h//2+2,self.w//2+1,f"<")
+        self.stdscr.refresh()
+
+    def arrowsDifficultyMenu(self,option):
+        if option == 0:
+            self.stdscr.addstr(self.h//2,self.w//2,f"<")
+            self.stdscr.addstr(self.h//2+1,self.w//2,f" ")
+            self.stdscr.addstr(self.h//2+2,self.w//2,f" ")
+            self.stdscr.addstr(self.h//2+4,self.w//2,f" ")
+        if option == 1:
+            self.stdscr.addstr(self.h//2,self.w//2,f" ")
+            self.stdscr.addstr(self.h//2+1,self.w//2,f"<")
+            self.stdscr.addstr(self.h//2+2,self.w//2,f" ")
+            self.stdscr.addstr(self.h//2+4,self.w//2,f" ")
+        if option == 2:
+            self.stdscr.addstr(self.h//2,self.w//2,f" ")
+            self.stdscr.addstr(self.h//2+1,self.w//2,f" ")
+            self.stdscr.addstr(self.h//2+2,self.w//2,f"<")
+            self.stdscr.addstr(self.h//2+4,self.w//2,f" ")
+        if option == 3:
+            self.stdscr.addstr(self.h//2,self.w//2,f" ")
+            self.stdscr.addstr(self.h//2+1,self.w//2,f" ")
+            self.stdscr.addstr(self.h//2+2,self.w//2,f" ")
+            self.stdscr.addstr(self.h//2+4,self.w//2,f"<")
+        self.stdscr.refresh()
+
+
         
 def setSpeed(difficulty):
     if difficulty == 0:
@@ -39,12 +107,7 @@ def whatIsDifficulty(number):
     if number == 2:
         return "HARD"
 
-def start(stdscr,x,y):
-    stdscr.addstr(y,x,"""
-                        _______ __   _ _______ _     _ _______       ______ _______ _______ _______
-                        |______ | \  | |_____| |____/  |______      |  ____ |_____| |  |  | |______
-                        ______| |  \_| |     | |    \_ |______      |_____| |     | |  |  | |______
-    """)
+
 def gameOver(stdscr,score,time):
     tab=""
     stdscr.clear()
@@ -108,8 +171,10 @@ def createMap(size):
     return array
 
 def main(stdscr):
-    view = View(stdscr)
+    stdscr.nodelay(True)
     curses.curs_set(0)
+    view = View(stdscr)
+    
     difficulty=0
     option = 0
     option_2 = 0
@@ -117,10 +182,8 @@ def main(stdscr):
     startTime=time.time()
     findingFoodCoordinats = True
     h,w = stdscr.getmaxyx()
-    stdscr.nodelay(True)
     size = 20
-    width = w//2 - size//2
-    center = int((size - 1)/2)
+    center = int(size / 2)
     headX = center
     headY = center
     foodX = random.randint(1, size-2)
@@ -163,9 +226,7 @@ def main(stdscr):
                     key = stdscr.getch()
                 except:
                     key = None
-                stdscr.addstr(0,0,f"{readScores()}")
-                stdscr.addstr(h//2+2,w//2-5,f"BACK<")
-                stdscr.refresh()
+                view.scoreTable()
                 if key == curses.KEY_LEFT:
                     stdscr.clear()
                     break
@@ -176,12 +237,8 @@ def main(stdscr):
                     key = stdscr.getch()
                 except:
                     key = None
-                
-                stdscr.addstr(h//2-2,w//2-12,f"ACTUAL DIFFICULTY:{whatIsDifficulty(difficulty)}")
-                stdscr.addstr(h//2,w//2-6,f"EASY")
-                stdscr.addstr(h//2+1,w//2-6,f"MEDIUM")
-                stdscr.addstr(h//2+2,w//2-6,f"HARD")
-                stdscr.addstr(h//2+4,w//2-6,f"BACK")
+
+                view.difficultyMenu(difficulty)
 
                 if key == curses.KEY_UP and option_2>=0:
                     option_2 = option_2 - 1
@@ -191,26 +248,8 @@ def main(stdscr):
                     option_2 = option_2 + 1
                     if option_2 == 4:
                         option_2 = 0
-                if option_2 == 0:
-                    stdscr.addstr(h//2,w//2,f"<")
-                    stdscr.addstr(h//2+1,w//2,f" ")
-                    stdscr.addstr(h//2+2,w//2,f" ")
-                    stdscr.addstr(h//2+4,w//2,f" ")
-                if option_2 == 1:
-                    stdscr.addstr(h//2,w//2,f" ")
-                    stdscr.addstr(h//2+1,w//2,f"<")
-                    stdscr.addstr(h//2+2,w//2,f" ")
-                    stdscr.addstr(h//2+4,w//2,f" ")
-                if option_2 == 2:
-                    stdscr.addstr(h//2,w//2,f" ")
-                    stdscr.addstr(h//2+1,w//2,f" ")
-                    stdscr.addstr(h//2+2,w//2,f"<")
-                    stdscr.addstr(h//2+4,w//2,f" ")
-                if option_2 == 3:
-                    stdscr.addstr(h//2,w//2,f" ")
-                    stdscr.addstr(h//2+1,w//2,f" ")
-                    stdscr.addstr(h//2+2,w//2,f" ")
-                    stdscr.addstr(h//2+4,w//2,f"<")
+
+                view.arrowsDifficultyMenu(option_2)
                 if key == curses.KEY_LEFT and option_2 == 3:
                     stdscr.clear()
                     break
@@ -218,19 +257,7 @@ def main(stdscr):
                     stdscr.clear()
                     difficulty = option_2
         view.mainMenu()
-        if option == 0:
-            stdscr.addstr(h//2,w//2,f"<")
-            stdscr.addstr(h//2+1,w//2+5,f" ")
-            stdscr.addstr(h//2+2,w//2,f" ")
-        if option == 1:
-            stdscr.addstr(h//2,w//2,f" ")
-            stdscr.addstr(h//2+1,w//2+5,f"<")
-            stdscr.addstr(h//2+2,w//2,f" ")
-        if option == 2:
-            stdscr.addstr(h//2,w//2,f" ")
-            stdscr.addstr(h//2+1,w//2+5,f" ")
-            stdscr.addstr(h//2+2,w//2,f"<")
-        stdscr.refresh()
+        view.arrowsMainMenu(option)
     stdscr.clear()
 
     speed = setSpeed(difficulty)
@@ -327,10 +354,7 @@ def main(stdscr):
             
         for i in range(size):
                 for j in range(size):
-                    stdscr.addstr(j,i+width,str(mapa[i][j]))
+                    stdscr.addstr(j,i+w//2-size//2,str(mapa[i][j]))
         scoreBoardTime = time.time() - startTime
-        stdscr.addstr(size,width,f"Time:{round(scoreBoardTime)} Score:{score*20}")
-        stdscr.addstr(size+1,width,f"direction:{direction}")
-        stdscr.addstr(size+1,width,f"difficulty:{whatIsDifficulty(difficulty)}")
-        stdscr.refresh()
+        view.legend(score,scoreBoardTime,difficulty,direction)
 wrapper(main)
