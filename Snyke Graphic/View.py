@@ -1,12 +1,21 @@
 from curses.textpad import Textbox
+import pygame
 import curses
+import os
 class View():
     
     def __init__(self,stdscr,model):
         self.model = model
         self.stdscr = stdscr
+        self.high = 1080
+        self.width = 1920
+        self.window = pygame.display.set_mode((self.width,self.high))
+        self.MAIN_MENU_IMG = pygame.image.load(os.path.join('img','main_menu.png'))
 
     def mainMenu(self):
+        self.window.blit(self.MAIN_MENU_IMG,(0,0))
+        pygame.display.update()
+
         self.start(60,10)
         self.stdscr.addstr(self.model.h//2,self.model.w//2-5,f"START")
         self.stdscr.addstr(self.model.h//2+1,self.model.w//2-5,f"DIFFICULTY")

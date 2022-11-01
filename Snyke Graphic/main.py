@@ -135,4 +135,5 @@ def main(stdscr):
                 
 
 if __name__ == '__main__':
+    #os.system("start cmd /k python main.py")
     wrapper(main)

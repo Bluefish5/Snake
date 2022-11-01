@@ -1,7 +1,10 @@
 import sys, pygame
+import curses
+from curses.textpad import Textbox
 class View():
     
     def __init__(self,stdscr,model):
+        self.stdscr = stdscr
         self.model = model
         pygame.init()
 
@@ -25,6 +28,7 @@ class View():
         self.stdscr.refresh()
 
     def endScreen(self):
+        self.end(60,10)
         self.stdscr.addstr(self.model.h//2,self.model.w//2-6,f"YOUR SCORE IS:{self.model.score*20} AND THE TIME:{round(self.model.scoreBoardTime)}")
         self.stdscr.addstr(self.model.h//2+1,self.model.w//2-6,f"DO YOU WANT TO SAVE YOUR SCORE?:")
         self.stdscr.addstr(self.model.h//2+2,self.model.w//2-6,f"YES")
