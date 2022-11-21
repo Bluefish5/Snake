@@ -1,8 +1,6 @@
 import curses
 import time
-
 from curses import wrapper
-
 from Model import*
 from Controller import*
 from View import*
@@ -18,19 +16,17 @@ def main(stdscr):
         controller = Controller(stdscr,model)
         while True:
             view.mainMenu()
-            controller.getUserKeyInput()
             controller.menuControll()
-
-            if controller.isLeftClicked():
+            if controller.isEnterClicked():
+                
                 if model.option == 0:
                     break
                 if model.option == 1:
                     stdscr.clear()
                     while True:
                         view.difficultyMenu()
-                        controller.getUserKeyInput()
                         controller.difficultyControll()
-                        if controller.isLeftClicked():
+                        if controller.isEnterClicked():
                             if model.option_2 == 3:
                                 stdscr.clear()
                                 break
@@ -41,8 +37,7 @@ def main(stdscr):
                     stdscr.clear()
                     while True:
                         view.scoreTable()
-                        controller.getUserKeyInput()
-                        if controller.isLeftClicked():
+                        if controller.isEnterClicked():
                             stdscr.clear()
                             break  
 
@@ -57,7 +52,6 @@ def main(stdscr):
             model.lastDirection = model.direction
             controller.getUserKeyInput()
             controller.inputDirection()
-            
             if(model.difference > model.speed):
                 model.sample = time.time()
                 model.mapa[model.headX][model.headY]=" "
@@ -73,6 +67,7 @@ def main(stdscr):
                         model.bodyCoordinats.append([model.headX,model.headY])
                     
                 if((model.headX == model.foodX) and (model.headY == model.foodY)):
+                    curses.beep()
                     controller.findingFoodCoordinats()
                     controller.addPoint()
                     model.bodyCoordinats.append([ model.headX, model.headY])
@@ -120,13 +115,14 @@ def main(stdscr):
         stdscr.clear()
         while True:
             view.endScreen()
-            controller.getUserKeyInput()
             controller.endMenuControll()
 
-            if controller.isLeftClicked():
+            if controller.isEnterClicked():
+                time.sleep(1)
                 if model.option == 1:
                     break
                 if model.option == 0:
+                    curses.flushinp()
                     stdscr.clear()
                     view.insertNameText()
                     view.insertNameBox()

@@ -1,5 +1,7 @@
-import curses
 import random
+import keyboard
+import time
+import curses
 
 class Controller():
     def __init__(self,stdscr,model):
@@ -8,42 +10,50 @@ class Controller():
         self.key = None
 
     def menuControll(self):
-        if self.model.key == curses.KEY_UP and self.model.option>=0:
+        if keyboard.is_pressed("up") and self.model.option>=0:
+            time.sleep(0.2)
             self.model.option = self.model.option - 1
             if self.model.option == -1:
                 self.model.option = 2
 
-        if self.model.key == curses.KEY_DOWN and self.model.option <= 2:
+        if keyboard.is_pressed("down") and self.model.option <= 2:
+            time.sleep(0.2)
             self.model.option = self.model.option + 1
             if self.model.option == 3:
                 self.model.option = 0
 
     def endMenuControll(self):
-        if self.model.key == curses.KEY_UP and self.model.option>=0:
+        if keyboard.is_pressed("up") and self.model.option>=0:
+            time.sleep(0.2)
             self.model.option = self.model.option - 1
             if self.model.option == -1:
                 self.model.option = 1
 
-        if self.model.key == curses.KEY_DOWN and self.model.option <= 1:
+        if keyboard.is_pressed("down") and self.model.option <= 1:
+            time.sleep(0.2)
             self.model.option = self.model.option + 1
             if self.model.option == 2:
                 self.model.option = 0
 
     def difficultyControll(self):
-        if self.model.key == curses.KEY_UP and self.model.option_2>=0:
+        if keyboard.is_pressed("up") and self.model.option_2>=0:
+            time.sleep(0.2)
             self.model.option_2 = self.model.option_2 - 1
             if self.model.option_2 == -1:
-                self.model.option_2 = 2
-        if self.model.key == curses.KEY_DOWN and self.model.option_2 <= 3:
+                self.model.option_2 = 3
+        if keyboard.is_pressed("down") and self.model.option_2 <= 3:
+            time.sleep(0.2)
             self.model.option_2 = self.model.option_2 + 1
             if self.model.option_2 == 4:
                 self.model.option_2 = 0
 
-    def isLeftClicked(self):
-        if self.model.key == curses.KEY_LEFT:
+    def isEnterClicked(self):
+        if keyboard.is_pressed("enter"):
+            time.sleep(0.2)
             return True
         else:
             return False
+            
 
     def inputDirection(self):
         if self.model.key == curses.KEY_DOWN and self.model.lastDirection !="N":
@@ -92,7 +102,7 @@ class Controller():
         return [self.model.headX, self.model.headY] in self.model.bodyCoordinats
     
     def updateTableMap(self):
-        self.model.mapa[self.model.foodX][self.model.foodY]="F"
+        self.model.mapa[self.model.foodX][self.model.foodY]="@"
         for i in self.model.bodyCoordinats:
             self.model.mapa[i[0]][i[1]]="B"
         self.model.mapa[self.model.headX][self.model.headY]="H"

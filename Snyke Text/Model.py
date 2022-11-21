@@ -17,7 +17,7 @@ class Model():
         self.option_2 = 0
         self.score = 0
         self.snakeLen = 0
-        self.size = 20
+        self.size = 30
 
         self.tab="" 
         self.lastDirection = "E"
@@ -38,6 +38,7 @@ class Model():
         self.mapa[self.headX][self.headY]="H"
         
         self.df = pandas.read_csv("Scores.csv").sort_values(by=["SCORE"], ascending=False).head(10)
+        self.df = self.df.to_string(index=False)
         self.createBorderOfMap()
         
     def createBorderOfMap(self):
