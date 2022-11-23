@@ -1,7 +1,4 @@
 import random
-import keyboard
-import time
-import curses
 import pygame
 
 class Controller():
@@ -41,7 +38,7 @@ class Controller():
     
     def saveScore(self):
         file = open("Scores.csv","a")
-        file.write(f"\n{self.model.tab},{self.model.score*20},{round(self.model.scoreBoardTime)}")
+        file.write(f"\n{self.model.userText},{self.model.score*20},{round(self.model.scoreBoardTime)}")
         file.close()
 
     def findingFoodCoordinats(self):

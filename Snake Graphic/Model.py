@@ -18,7 +18,7 @@ class Model():
         self.snakeLen = 0
         self.size = 15
 
-        self.tab="" 
+        self.userText="" 
         self.lastDirection = "E"
         self.direction = "E"
 

@@ -1,4 +1,3 @@
-import curses
 import time
 from curses import wrapper
 from Model import*
@@ -137,6 +136,8 @@ def main():
 
             if (view.BUTTON_YES_RECT.collidepoint(pos)):
                 if pygame.mouse.get_pressed()[0]==1:
+                    view.insertName()
+                    controller.saveScore()
                     break
                 
 

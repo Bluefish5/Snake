@@ -1,5 +1,3 @@
-import curses
-from curses.textpad import Textbox
 import pygame
 import os
 class View():
@@ -7,7 +5,6 @@ class View():
     def __init__(self,model):
         pygame.font.init()
         self.model = model
-        
         self.WIDTH = 1920/2
         self.HEIGHT = 1080/2
 
@@ -270,17 +267,24 @@ class View():
 
         pygame.display.update()
 
-    def insertNameText(self):
-        self.stdscr.addstr(self.model.h//2,self.model.w//2,f"INSERT YOUR NAME:")
-        self.stdscr.refresh()
-
-    def insertNameBox(self):
-        editwin = curses.newwin(1,16, self.model.h//2+1,self.model.w//2)
-        box = Textbox(editwin)
-        box.edit()
-        self.model.tab = box.gather()
-        self.stdscr.refresh()
-        
+    def insertName(self):
+        run = True
+        while run:
+            self.WINDOW.blit(self.MAIN,(0,0))
+            textSurface = self.font.render(self.model.userText,True,(255,255,255))
+            self.WINDOW.blit(textSurface,(self.WIDTH/2,self.HEIGHT/2))
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_BACKSPACE:
+                        self.model.userText = self.model.userText[:-1]
+                    elif event.key == pygame.K_RETURN:
+                        run = False
+                    else:
+                        self.model.userText+= event.unicode
+            pygame.display.update()
+       
     def updateMap(self):
         self.WINDOW.blit(self.MAIN,(0,0))
 
